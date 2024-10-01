@@ -22,10 +22,9 @@
 
 #include "Pose2d.h"
 
-// TODO timer callback that tries to assign a job.
-// Check the current waypoint to see if at destination.
-// Need some variables to encode state. Trigger a motion request when none are active,
-// and monitor to see if it stalls/reaches. If stalled, abort and go to the next task (log an error)
+// TODO needs to split a task into multiple jobs (currently just one waypoint each)
+// Needs error recovery
+// If stalled, abort and go to the next task (log an error)
 // If reached, try to get the next waypoint. If no waypoints remain, log sucessful completion and then load the next task.
 
 using NavigateToPose = nav2_msgs::action::NavigateToPose;
