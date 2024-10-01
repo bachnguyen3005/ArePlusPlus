@@ -19,9 +19,11 @@ find_package(nav_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(rclcpp_action REQUIRED)
 
 add_executable(TaskHandler src/taskhandler.cpp src/Pose2d.h)
-ament_target_dependencies(TaskHandler rclcpp tf2 nav_msgs std_msgs sensor_msgs geometry_msgs OpenCV cv_bridge)
+ament_target_dependencies(TaskHandler rclcpp nav2_msgs rclcpp_action tf2 nav_msgs std_msgs sensor_msgs geometry_msgs OpenCV cv_bridge)
 
 install(TARGETS
   TaskHandler
