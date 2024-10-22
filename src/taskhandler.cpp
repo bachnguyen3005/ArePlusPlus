@@ -311,7 +311,11 @@ int main(int argc, char* argv[]) {
     if (do_auto_load_locations) {
         std::unordered_map<int, Pose2d> station_locations;
         std::unordered_map<int, Pose2d> product_locations;
-        
+        /*
+        shelf#2 (-2,2)    shelf#3 (2,2)
+
+        shelf#1 (-2,-1)   shelf#4 (2,-1)
+*/
         station_locations[1] = Pose2d(1, 1, 0);
         station_locations[2] = Pose2d(1, 1, 0);
         station_locations[3] = Pose2d(5, 1, 0);
