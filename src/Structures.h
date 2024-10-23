@@ -1,5 +1,9 @@
+#ifndef STRUCTURE_H
+#define STRUCTURE_H
+
 #include "geometry_msgs/msg/pose.hpp"
 #include "vector"
+
 
 struct Pose2d {
 public:
@@ -36,11 +40,22 @@ struct Order {
 };
 
 
+struct NavNode {
+    Pose2d pose;
+    bool is_manual_approach;
+    bool is_final_approach;
+    int action_type;
+};
+
+
 struct Station {
     int station_id;
     Pose2d location;
-    std::vector<Pose2d> path;
+    std::vector<NavNode> path;
+
     
     Station() : station_id(0) {};
-    Station(int id, Pose2d loc, std::vector<Pose2d> pth) : station_id(id), location(loc), path(pth) {}
+    Station(int id, Pose2d loc, std::vector<NavNode> pth) : station_id(id), location(loc), path(pth) {}
 };
+
+#endif

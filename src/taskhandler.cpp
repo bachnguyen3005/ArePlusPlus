@@ -20,11 +20,12 @@
 #include <vector>
 #include <utility>
 
+#include "TaskPlanner.h"
 #include "Structures.h"
 
 using NavigateToPose = nav2_msgs::action::NavigateToPose;
 using GoalHandleNavigateToPose = rclcpp_action::ClientGoalHandle<NavigateToPose>;
-
+/*
 // DO NOT USE THIS ONE PRETTY PLEASE
 class TaskPlanner : public rclcpp::Node {
 public:
@@ -286,6 +287,7 @@ private:
 
 
 };
+*/
 
 int main(int argc, char* argv[]) {
     rclcpp::init(argc, argv);
@@ -330,9 +332,9 @@ int main(int argc, char* argv[]) {
         product_locations[5] = Pose2d(3, 0, 0);
         product_locations[6] = Pose2d(5, 0, 0);
 
-        node->set_all_product_locations(product_locations);
-        node->set_all_station_locations(station_locations);
-        node->set_activation_state(true);
+        //node->set_all_product_locations(product_locations);
+        //node->set_all_station_locations(station_locations);
+        //node->set_activation_state(true);
     }
 
     rclcpp::spin(node);

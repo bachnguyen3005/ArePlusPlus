@@ -26,28 +26,40 @@ void TaskPlanner::prep_next_order() {
         auto pathCtoA = station_locations[product_locations[new_order.product_id]].path;
         auto pathCtoB = station_locations[new_order.station_id].path;
 
+        // TODO start event -> navnode special type
+
         for (const auto& point : pathCtoA) {
                 current_job_points_.push(point);
         }
+
+        // TODO pickup event
+        // TODO change state event
     
         for (auto it = pathCtoA.rbegin() + 1; it != pathCtoA.rend(); ++it) {
                 current_job_points_.push(*it);
         }
 
+        // TODO change state event
+
         for (const auto& point : pathCtoB) {
                 current_job_points_.push(point);
         }
 
+        // TODO dropoff event
+        // TODO change state event
+
         for (auto it = pathCtoB.rbegin() + 1; it != pathCtoB.rend(); ++it) {
                 current_job_points_.push(*it);
         }
+
+        // TODO finished event
+
+        package_id = new_order.product_id;
+        dropoff_station_id = new_order.station_id;
+        pickup_station_id = product_locations[new_order.product_id];
 }
 
 bool TaskPlanner::load_locations_from_file() {
-
-}
-
-void TaskPlanner::set_station_location(int station_id, Pose2d location, std::vector<Pose2d> path) {
 
 }
 
@@ -69,17 +81,31 @@ void TaskPlanner::timer_callback() {
                 return;
             }
         }
+
+        // TODO handle special nav_nodes
+        // Pickup/dropoff
         
         // Check if we're at our current target
-        if (is_at_target(current_job_points_.front())) {
+        if (is_at_target(current_job_points_.front().pose)) {
             current_job_points_.pop();  // Clear the current task
             
             if (!current_job_points_.empty()) {
-                go_to_point(current_job_points_.front());  // Command to move to the next one
+                if (current_job_points_.front().is_manual_approach) {
+                        go_to_point(current_job_points_.front().pose);  // Command to move to the next one
+                } else {
+                        // TODO NAV2 approach
+                }
             }
+        }
+
+        if (current_job_points_.front().is_final_approach) {
+            int station_id = 0;
+            if (!get_visible_station_code(station_id)) return;
+            // TODO check against expected id
+            //if (station_id != current_job_target_id)
         }
     }
 
-bool get_visible_station_code(int& tag_id) {
+bool TaskPlanner::get_visible_station_code(int& tag_id) {
         
 }
