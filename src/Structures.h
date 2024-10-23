@@ -1,4 +1,5 @@
 #include "geometry_msgs/msg/pose.hpp"
+#include "vector"
 
 struct Pose2d {
 public:
@@ -24,4 +25,22 @@ public:
 
         return pose;
     }
+};
+
+
+struct Order {
+    int product_id;
+    int station_id;
+    
+    Order(int prod, int station) : product_id(prod), station_id(station) {}
+};
+
+
+struct Station {
+    int station_id;
+    Pose2d location;
+    std::vector<Pose2d> path;
+    
+    Station() : station_id(0) {};
+    Station(int id, Pose2d loc, std::vector<Pose2d> pth) : station_id(id), location(loc), path(pth) {}
 };

@@ -79,3 +79,7 @@ void TaskPlanner::timer_callback() {
             }
         }
     }
+
+bool get_visible_station_code(int& tag_id) {
+        
+}

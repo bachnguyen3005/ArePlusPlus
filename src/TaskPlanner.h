@@ -1,0 +1,61 @@
+#ifndef TASK_PLANNER_H
+#define TASK_PLANNER_H
+
+#include <rclcpp/rclcpp.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <std_msgs/msg/int32_multi_array.hpp>
+#include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <rclcpp_action/rclcpp_action.hpp>
+#include <nav2_msgs/action/navigate_to_pose.hpp>
+#include <unordered_map>
+#include <queue>
+#include "Structures.h"
+
+class TaskPlanner : public rclcpp::Node {
+public:
+    TaskPlanner(std::vector<std::pair<int, int>> initial_tasks) : Node("task_planner") {
+        timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(100),
+            std::bind(&TaskPlanner::timer_callback, this));
+
+        for (auto task: initial_tasks){
+            Order order(task.first, task.second);
+            pending_orders_.push(order);
+        }
+    }
+
+    TaskPlanner() : Node("task_planner") {
+        timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(100),
+            std::bind(&TaskPlanner::timer_callback, this));
+    }
+
+private:
+    void timer_callback();  // This one gets to do the main logic
+    
+    // These need to be implemented & doxygened
+    bool is_at_target(const Pose2d& target);  // < Thish
+    void go_to_point(const Pose2d& target);  // < Thish
+    void prep_next_order();  // < Adi
+    bool load_locations_from_file();  // < Dinh
+    void set_station_location(int station_id, Pose2d location, std::vector<Pose2d> path);  // < Dinh
+    bool get_visible_station_code(int& tag_id);  // < Jack
+
+    // Other todo:
+    // E-stop services
+    // Doxygen
+    // Status outputs, with a silence flag
+
+    // Member variables
+    std::queue<Order> pending_orders_;
+    std::queue<Pose2d> current_job_points_;
+    rclcpp::TimerBase::SharedPtr timer_;
+
+    std::unordered_map<int, Station> station_locations;
+    std::unordered_map<int, int> product_locations;  // Products are only allowed to be at stations
+
+    bool is_active = false;  // Is the system allowed to perform operations
+};
+
+#endif // TASK_PLANNER_H

@@ -20,16 +20,12 @@
 #include <vector>
 #include <utility>
 
-#include "Pose2d.h"
-
-// TODO needs to split a task into multiple jobs (currently just one waypoint each)
-// Needs error recovery
-// If stalled, abort and go to the next task (log an error)
-// If reached, try to get the next waypoint. If no waypoints remain, log sucessful completion and then load the next task.
+#include "Structures.h"
 
 using NavigateToPose = nav2_msgs::action::NavigateToPose;
 using GoalHandleNavigateToPose = rclcpp_action::ClientGoalHandle<NavigateToPose>;
 
+// DO NOT USE THIS ONE PRETTY PLEASE
 class TaskPlanner : public rclcpp::Node {
 public:
     TaskPlanner(std::vector<std::pair<int, int>> initial_tasks) : Node("task_planner") {
