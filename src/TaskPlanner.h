@@ -36,10 +36,11 @@ private:
     
     // These need to be implemented & doxygened
     bool is_at_target(const Pose2d& target);  // < Thish
-    void go_to_point(const Pose2d& target);  // < Thish
+    void manual_go_to_point(const Pose2d& target);  // < Thish
+    void nav2_go_to_point(const Pose2d& target);  // < Jack
     void prep_next_order();  // < Adi
-    bool load_locations_from_file();  // < Dinh
-    bool get_visible_station_code(int& tag_id);  // < Jack/Dinh
+    bool load_locations_from_file();  // < Dinh, lmk if you want a hand here.
+    bool get_visible_station_code(int& tag_id);  // < Dinh
 
     // Other todo:
     // E-stop services

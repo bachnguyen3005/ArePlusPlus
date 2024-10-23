@@ -307,33 +307,6 @@ int main(int argc, char* argv[]) {
     node = std::make_shared<TaskPlanner>(initial_tasks);
 
     if (do_auto_load_locations) {
-        std::unordered_map<int, Pose2d> station_locations;
-        std::unordered_map<int, Pose2d> product_locations;
-        /*
-        shelf#2 (-2,2)    shelf#3 (2,2)
-
-        shelf#1 (-2,-1)   shelf#4 (2,-1)
-*/
-        station_locations[1] = Pose2d(1, 1, 0);
-        station_locations[2] = Pose2d(1, 1, 0);
-        station_locations[3] = Pose2d(5, 1, 0);
-
-        station_locations[-1] = Pose2d(1, 3, 0);  // TODO -stations are for products to stay
-        station_locations[-2] = Pose2d(3, 3, 0);
-        station_locations[-3] = Pose2d(5, 3, 0);
-        station_locations[-4] = Pose2d(1, 0, 0);
-        station_locations[-5] = Pose2d(3, 0, 0);
-        station_locations[-6] = Pose2d(5, 0, 0);
-
-        product_locations[1] = Pose2d(0.5, -1, 0);
-        product_locations[2] = Pose2d(1.0, -1, 0);
-        product_locations[3] = Pose2d(1.5, -1, 0);
-        product_locations[4] = Pose2d(1, 0, 0);
-        product_locations[5] = Pose2d(3, 0, 0);
-        product_locations[6] = Pose2d(5, 0, 0);
-
-        //node->set_all_product_locations(product_locations);
-        //node->set_all_station_locations(station_locations);
         //node->set_activation_state(true);
     }
 

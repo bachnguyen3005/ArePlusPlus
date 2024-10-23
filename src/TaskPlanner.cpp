@@ -1,10 +1,23 @@
 #include "TaskPlanner.h"
 
 bool TaskPlanner::is_at_target(const Pose2d& target) {
+        // Jack, Thish here
+        // You need to make sure both xy and yaw are within spec. 
+        // If Nav2 is doing the movement, you need to check whether nav2 thinks its done. 
+        //        This will involve using a callback, and doing error handling on the callback. See the older code for a reference.
         return false;
 }
-void TaskPlanner::go_to_point(const Pose2d& target) {
+void TaskPlanner::nav2_go_to_point(const Pose2d& target) {
+        // Jack here
+        // You need to interlock with the manual code to make sure only one is running at any one time.
+        // The most recent one to have started gets priority
+}
 
+void TaskPlanner::manual_go_to_point(const Pose2d& target) {
+        // Thish here
+        // You need to interlock with the nav2 code to make sure only one is running at any one time.
+        // The most recent one to have started gets priority
+        // Make yourself some tests for this to make sure it works
 }
 
 void TaskPlanner::prep_next_order() {
@@ -67,7 +80,20 @@ void TaskPlanner::prep_next_order() {
 }
 
 bool TaskPlanner::load_locations_from_file() {
+        /*
+        shelf#2 (-2,2)    shelf#3 (2,2)
 
+        shelf#1 (-2,-1)   shelf#4 (2,-1)
+        */
+        std::vector<NavNode> pth;  // TODO each needs its own path from the center
+        station_locations[1] = Station(1, Pose2d(1, 1, 0), pth);
+        station_locations[2] = Station(2, Pose2d(1, 1, 0), pth);
+        station_locations[3] = Station(3, Pose2d(5, 1, 0), pth);
+
+        station_locations[-1] = Station(-1, Pose2d(-2, -1, 0), pth); 
+        station_locations[-2] = Station(-2, Pose2d(-2, 2, 0), pth);
+        station_locations[-3] = Station(-3, Pose2d(2, 2, 0), pth);
+        station_locations[-4] = Station(-4, Pose2d(2, -1, 0), pth);
 }
 
 bool get_visible_station_code(int& tag_id) {
@@ -98,9 +124,9 @@ void TaskPlanner::timer_callback() {
                 switch (current_job_points_.front().action_type) {
                 case ActionType::normal:
                         if (current_job_points_.front().is_manual_approach) {
-                                go_to_point(current_job_points_.front().pose);  // Command to move to the next one
+                                manual_go_to_point(current_job_points_.front().pose);  // Command to move to the next one
                         } else {
-                                // TODO NAV2 approach
+                                nav2_go_to_point(current_job_points_.front().pose);  // Let Nav2 do it
                         }
                         break;
                 case ActionType::advance_state:
@@ -138,6 +164,7 @@ void TaskPlanner::timer_callback() {
             int station_id = 0;
             if (!get_visible_station_code(station_id)) return;
 
+            // The apriltag doesn't match the expected value
             if (status == JobStatus::ToPickup && station_id != pickup_station_id) {
                 // TODO log an error or abort idk @suraj
             }
