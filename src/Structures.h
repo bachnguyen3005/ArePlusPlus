@@ -2,8 +2,27 @@
 #define STRUCTURE_H
 
 #include "geometry_msgs/msg/pose.hpp"
-#include "vector"
+#include <vector>
 
+
+enum class ActionType {
+    normal,
+    start,
+    finish,
+    pickup,
+    dropoff,
+    advance_state
+};
+
+enum class JobStatus {
+    Error,
+    Estop,
+    Idle,
+    ToPickup,
+    FromPickup,
+    ToDestination,
+    FromDestination
+};
 
 struct Pose2d {
 public:
@@ -18,19 +37,16 @@ public:
         geometry_msgs::msg::Pose pose;
         pose.position.x = static_cast<double>(pos_x);
         pose.position.y = static_cast<double>(pos_y);
-        pose.position.z = 0.0;  
-
+        pose.position.z = 0.0;
         double cy = std::cos(yaw * 0.5);
         double sy = std::sin(yaw * 0.5);
         pose.orientation.x = 0.0;
         pose.orientation.y = 0.0;
         pose.orientation.z = sy;
         pose.orientation.w = cy;
-
         return pose;
     }
 };
-
 
 struct Order {
     int product_id;
@@ -39,23 +55,24 @@ struct Order {
     Order(int prod, int station) : product_id(prod), station_id(station) {}
 };
 
-
 struct NavNode {
     Pose2d pose;
-    bool is_manual_approach;
-    bool is_final_approach;
-    int action_type;
-};
+    bool is_manual_approach = false; 
+    bool is_final_approach = false;
+    ActionType action_type;
 
+    NavNode() = default; 
+    explicit NavNode(ActionType type) : action_type(type) {}
+};
 
 struct Station {
     int station_id;
     Pose2d location;
     std::vector<NavNode> path;
 
-    
-    Station() : station_id(0) {};
-    Station(int id, Pose2d loc, std::vector<NavNode> pth) : station_id(id), location(loc), path(pth) {}
+    Station() : station_id(0) {}
+    Station(int id, Pose2d loc, std::vector<NavNode> pth) 
+        : station_id(id), location(std::move(loc)), path(std::move(pth)) {}
 };
 
-#endif
+#endif  // STRUCTURE_H

@@ -26,33 +26,40 @@ void TaskPlanner::prep_next_order() {
         auto pathCtoA = station_locations[product_locations[new_order.product_id]].path;
         auto pathCtoB = station_locations[new_order.station_id].path;
 
-        // TODO start event -> navnode special type
+        NavNode node(ActionType::start);
+        current_job_points_.push(node);
 
         for (const auto& point : pathCtoA) {
                 current_job_points_.push(point);
         }
 
-        // TODO pickup event
-        // TODO change state event
+        node.action_type = ActionType::pickup;
+        current_job_points_.push(node);
+        node.action_type = ActionType::advance_state;
+        current_job_points_.push(node);
     
         for (auto it = pathCtoA.rbegin() + 1; it != pathCtoA.rend(); ++it) {
                 current_job_points_.push(*it);
         }
 
-        // TODO change state event
+        node.action_type = ActionType::advance_state;
+        current_job_points_.push(node);
 
         for (const auto& point : pathCtoB) {
                 current_job_points_.push(point);
         }
 
-        // TODO dropoff event
-        // TODO change state event
+        node.action_type = ActionType::dropoff;
+        current_job_points_.push(node);
+        node.action_type = ActionType::advance_state;
+        current_job_points_.push(node);
 
         for (auto it = pathCtoB.rbegin() + 1; it != pathCtoB.rend(); ++it) {
                 current_job_points_.push(*it);
         }
 
-        // TODO finished event
+        node.action_type = ActionType::finish;
+        current_job_points_.push(node);
 
         package_id = new_order.product_id;
         dropoff_station_id = new_order.station_id;
@@ -81,19 +88,48 @@ void TaskPlanner::timer_callback() {
                 return;
             }
         }
-
-        // TODO handle special nav_nodes
-        // Pickup/dropoff
         
         // Check if we're at our current target
-        if (is_at_target(current_job_points_.front().pose)) {
+        if (is_at_target(current_job_points_.front().pose) ||  // This is for a normal action
+        current_job_points_.front().action_type != ActionType::normal) {  // This indicates a special action
             current_job_points_.pop();  // Clear the current task
             
             if (!current_job_points_.empty()) {
-                if (current_job_points_.front().is_manual_approach) {
-                        go_to_point(current_job_points_.front().pose);  // Command to move to the next one
-                } else {
-                        // TODO NAV2 approach
+                switch (current_job_points_.front().action_type) {
+                case ActionType::normal:
+                        if (current_job_points_.front().is_manual_approach) {
+                                go_to_point(current_job_points_.front().pose);  // Command to move to the next one
+                        } else {
+                                // TODO NAV2 approach
+                        }
+                        break;
+                case ActionType::advance_state:
+                        if (status == JobStatus::ToPickup) {
+                                status = JobStatus::FromPickup;
+                        } else if (status == JobStatus::FromPickup) {
+                                status = JobStatus::ToDestination;
+                        } else if (status == JobStatus::ToDestination) {
+                                status = JobStatus::FromDestination;
+                        } else {
+                                // TODO @suraj Print an error. This should not trigger, implies the job wasn't reset, or somehow had more than 4 phases
+                        }
+                        break;
+                case ActionType::pickup:
+                        // TODO print a message idk @suraj
+                        break;
+                case ActionType::dropoff:
+                        // TODO print a message idk @suraj
+                        break;
+                case ActionType::start:
+                        // TODO print a message? @suraj
+                        status = JobStatus::ToPickup;
+                        break;
+                case ActionType::finish:
+                        // TODO not sure. Print a message? @suraj
+                        break;
+                default:
+                        // This means an invalid action type, trigger an error
+                        break;
                 }
             }
         }
@@ -101,8 +137,13 @@ void TaskPlanner::timer_callback() {
         if (current_job_points_.front().is_final_approach) {
             int station_id = 0;
             if (!get_visible_station_code(station_id)) return;
-            // TODO check against expected id
-            //if (station_id != current_job_target_id)
+
+            if (status == JobStatus::ToPickup && station_id != pickup_station_id) {
+                // TODO log an error or abort idk @suraj
+            }
+            if (status == JobStatus::ToDestination && station_id != dropoff_station_id) {
+                // TODO log an error or abort idk @suraj
+            }
         }
     }
 

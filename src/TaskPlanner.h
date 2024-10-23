@@ -59,6 +59,7 @@ private:
     int pickup_station_id = 0;
     int dropoff_station_id = 0;
     int package_id = 0;
+    JobStatus status = JobStatus::Idle;
 };
 
 #endif // TASK_PLANNER_H
