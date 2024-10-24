@@ -78,6 +78,7 @@ void TaskPlanner::prep_next_order() {
         dropoff_station_id = new_order.station_id;
         pickup_station_id = product_locations[new_order.product_id];
 }
+
 std::vector<NavNode> generatePathToStation(const Pose2d& destination) {
     std::vector<NavNode> path;
     path.push_back(NavNode(ActionType::start));
@@ -100,7 +101,7 @@ bool TaskPlanner::load_locations_from_file() {
         */
 
         //std::vector<NavNode> pth;  // TODO each needs its own path from the center
-        
+
         // Load station locations with paths generated from the center to the station
         station_locations[1] = Station(1, Pose2d(1, 1, 0), generatePathToStation(Pose2d(1, 1, 0)));
         station_locations[2] = Station(2, Pose2d(2, 1, 0), generatePathToStation(Pose2d(2, 1, 0)));
