@@ -11,6 +11,11 @@
 #include <unordered_map>
 #include <queue>
 #include "Structures.h"
+#include "sensor_msgs/msg/image.hpp" // For AR tag detection
+#include "sensor_msgs/msg/camera_info.hpp" // For AR tag detection
+#include "apriltag_msgs/msg/april_tag_detection_array.hpp" // For AR tag detection
+#include "cv_bridge/cv_bridge.h" // For AR tag detection
+#include "opencv2/opencv.hpp" // For AR tag detection
 
 class TaskPlanner : public rclcpp::Node {
 public:
@@ -56,7 +61,7 @@ private:
     std::unordered_map<int, int> product_locations;  // Products are only allowed to be at stations
 
     std::vector<NavNode> generatePathToStation(const Pose2d& destination);
-    
+
     bool is_active = false;  // Is the system allowed to perform operations
 
     int pickup_station_id = 0;
