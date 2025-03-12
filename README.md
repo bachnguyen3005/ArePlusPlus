@@ -1,4 +1,4 @@
-# Warehouse robot simulation with TurtleBot 
+# Project for Robotics Studio 1 Subject - Warehouse robot simulation with TurtleBot 
 
 The Robotic Studio 1 Smart Factory project develops software capabilities to allow a robotic platform 
 within a warehouse to perform useful activities, avoiding human risk and WHS concerns. The 
