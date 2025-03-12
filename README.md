@@ -1,4 +1,4 @@
-# Project for Robotics Studio 1 Subject - Warehouse robot simulation with TurtleBot 
+## Project for Robotics Studio 1 Subject - Warehouse robot simulation with TurtleBot 
 
 The Robotic Studio 1 Smart Factory project develops software capabilities to allow a robotic platform 
 within a warehouse to perform useful activities, avoiding human risk and WHS concerns. The 
@@ -21,16 +21,16 @@ to build upon. Further work could include implementing specific hardware to phys
 interact with products, navigation capabilities real-world environments with a wider range of 
 conditions.
 
-# System flow chart 
+## System flow chart 
 
 ![Small image](System_overview.png)
 
-# Map generated with slam_toolbox
+## Map generated with slam_toolbox
 
 ![Small image](Map_generated_by_slam_tool_box.png)
 ![Small image](nav2_stack.png)
 
 
-# A node to detect and read April Tag 
+## A node to detect and read April Tag 
 
 ![Small image](April_tag_reading.png)
