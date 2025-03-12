@@ -1,2 +1,2 @@
 
-![Medium image](System_flow_chart.jpg)
+![Medium image](System_flow_chart.png)
